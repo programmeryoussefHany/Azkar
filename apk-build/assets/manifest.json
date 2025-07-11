@@ -1,0 +1,43 @@
+{
+  "name": "أذكاري - تطبيق الأذكار الإسلامي",
+  "short_name": "أذكاري",
+  "description": "تطبيق شامل للأذكار الإسلامية اليومية مع أذكار الصباح والمساء والتسبيح",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#228B22",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["lifestyle", "education", "utilities"],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "الصفحة الرئيسية للتطبيق"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>إنشاء أيقونات التطبيق</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; direction: rtl; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        .icon-preview { display: inline-block; margin: 10px; text-align: center; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🎨 مولد أيقونات تطبيق أذكاري</h1>
+    
+    <div class="icon-preview">
+        <h3>أيقونة 192x192</h3>
+        <canvas id="icon192" width="192" height="192"></canvas>
+        <br><button onclick="downloadIcon('icon192', 'icon-192x192.png')">تحميل</button>
+    </div>
+    
+    <div class="icon-preview">
+        <h3>أيقونة 512x512</h3>
+        <canvas id="icon512" width="512" height="512"></canvas>
+        <br><button onclick="downloadIcon('icon512', 'icon-512x512.png')">تحميل</button>
+    </div>
+    
+    <div class="icon-preview">
+        <h3>فافيكون 32x32</h3>
+        <canvas id="favicon" width="32" height="32"></canvas>
+        <br><button onclick="downloadIcon('favicon', 'favicon.png')">تحميل</button>
+    </div>
+
+    <script>
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const center = size / 2;
+            const margin = size * 0.03;
+            const cornerRadius = size * 0.18;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+
+            // Background gradient (light cream)
+            const bgGradient = ctx.createLinearGradient(0, 0, size, size);
+            bgGradient.addColorStop(0, '#f8f9fa');
+            bgGradient.addColorStop(1, '#e9ecef');
+
+            // Main rounded rectangle
+            ctx.beginPath();
+            roundRect(ctx, margin, margin, size - 2*margin, size - 2*margin, cornerRadius);
+            ctx.fillStyle = bgGradient;
+            ctx.fill();
+            ctx.strokeStyle = '#dee2e6';
+            ctx.lineWidth = size * 0.008;
+            ctx.stroke();
+
+            // Crescent moon
+            const moonSize = size * 0.12;
+            const moonX = center - size * 0.11;
+            const moonY = center - size * 0.32;
+
+            ctx.fillStyle = '#228B22';
+            ctx.beginPath();
+            ctx.arc(moonX, moonY, moonSize, 0.2 * Math.PI, 1.8 * Math.PI);
+            ctx.arc(moonX + moonSize * 0.6, moonY, moonSize * 0.8, 1.2 * Math.PI, 0.8 * Math.PI, true);
+            ctx.fill();
+
+            // Prayer beads (Tasbih)
+            const beadStartX = center - size * 0.27;
+            const beadY = center - size * 0.15;
+            const beadPositions = [0, 0.08, 0.16, 0.24, 0.32, 0.4];
+
+            // String curve
+            ctx.strokeStyle = '#228B22';
+            ctx.lineWidth = size * 0.008;
+            ctx.beginPath();
+            ctx.moveTo(beadStartX, beadY);
+            for (let i = 0; i < beadPositions.length; i++) {
+                const x = beadStartX + beadPositions[i] * size;
+                const y = beadY + (i % 2 === 0 ? 0 : size * 0.02);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Draw beads
+            beadPositions.forEach((pos, i) => {
+                const x = beadStartX + pos * size;
+                const y = beadY + (i % 2 === 0 ? 0 : size * 0.02);
+                const beadSize = i === beadPositions.length - 1 ? size * 0.024 : size * 0.016;
+
+                ctx.fillStyle = '#228B22';
+                ctx.beginPath();
+                ctx.arc(x, y, beadSize, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+
+            // Open Book
+            const bookWidth = size * 0.32;
+            const bookHeight = size * 0.2;
+            const bookX = center - bookWidth / 2;
+            const bookY = center - size * 0.02;
+
+            // Book outline
+            ctx.strokeStyle = '#228B22';
+            ctx.lineWidth = size * 0.012;
+            ctx.beginPath();
+            // Left page
+            ctx.moveTo(bookX, bookY);
+            ctx.quadraticCurveTo(bookX, bookY - size * 0.04, bookX + size * 0.02, bookY - size * 0.04);
+            ctx.lineTo(center - size * 0.02, bookY - size * 0.04);
+            ctx.quadraticCurveTo(center, bookY - size * 0.06, center + size * 0.02, bookY - size * 0.04);
+            ctx.lineTo(bookX + bookWidth - size * 0.02, bookY - size * 0.04);
+            ctx.quadraticCurveTo(bookX + bookWidth, bookY - size * 0.04, bookX + bookWidth, bookY);
+            ctx.lineTo(bookX + bookWidth, bookY + bookHeight);
+            ctx.quadraticCurveTo(bookX + bookWidth, bookY + bookHeight + size * 0.04, bookX + bookWidth - size * 0.02, bookY + bookHeight + size * 0.04);
+            ctx.lineTo(center + size * 0.02, bookY + bookHeight + size * 0.04);
+            ctx.quadraticCurveTo(center, bookY + bookHeight + size * 0.06, center - size * 0.02, bookY + bookHeight + size * 0.04);
+            ctx.lineTo(bookX + size * 0.02, bookY + bookHeight + size * 0.04);
+            ctx.quadraticCurveTo(bookX, bookY + bookHeight + size * 0.04, bookX, bookY + bookHeight);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Book spine
+            ctx.beginPath();
+            ctx.moveTo(center, bookY - size * 0.04);
+            ctx.lineTo(center, bookY + bookHeight + size * 0.04);
+            ctx.stroke();
+
+            // Book pages lines
+            ctx.lineWidth = size * 0.004;
+            const lineSpacing = bookHeight / 5;
+            for (let i = 1; i <= 4; i++) {
+                const lineY = bookY + i * lineSpacing;
+                // Left page lines
+                ctx.beginPath();
+                ctx.moveTo(bookX + size * 0.02, lineY);
+                ctx.lineTo(center - size * 0.03, lineY);
+                ctx.stroke();
+                // Right page lines
+                ctx.beginPath();
+                ctx.moveTo(center + size * 0.03, lineY);
+                ctx.lineTo(bookX + bookWidth - size * 0.02, lineY);
+                ctx.stroke();
+            }
+
+            // Arabic text "أذكاري"
+            if (size >= 64) {
+                const fontSize = size * 0.125;
+                ctx.font = `bold ${fontSize}px serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                ctx.fillStyle = '#228B22';
+                ctx.fillText('أذكاري', center, center + size * 0.25);
+            }
+        }
+        
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function drawStar(ctx, x, y, radius, points) {
+            const angle = Math.PI / points;
+            ctx.beginPath();
+            for (let i = 0; i < 2 * points; i++) {
+                const r = i % 2 === 0 ? radius : radius * 0.5;
+                const a = i * angle;
+                const px = x + Math.cos(a) * r;
+                const py = y + Math.sin(a) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+        
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Generate all icons
+        drawIcon(document.getElementById('icon192'), 192);
+        drawIcon(document.getElementById('icon512'), 512);
+        drawIcon(document.getElementById('favicon'), 32);
+    </script>
+</body>
+</html>

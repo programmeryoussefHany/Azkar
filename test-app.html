@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار تطبيق أذكاري</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        .counter {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕌 اختبار تطبيق أذكاري</h1>
+        
+        <div class="test-section success">
+            <h2>✅ تم إصلاح مشكلة العداد</h2>
+            <p><strong>المشكلة السابقة:</strong> العداد كان يعرض عدد الأذكار المكتملة (0/12) بدلاً من عدد التكرارات الفعلية.</p>
+            <p><strong>الحل:</strong> تم تطوير نظام عد تكرارات ذكي يحسب إجمالي التكرارات المطلوبة مقابل التكرارات المنجزة.</p>
+        </div>
+
+        <div class="test-section info">
+            <h2>📊 كيف يعمل العداد الجديد</h2>
+            <p><strong>أذكار الصباح:</strong></p>
+            <ul>
+                <li>آية الكرسي: 1 مرة</li>
+                <li>بسم الله الذي لا يضر: 3 مرات</li>
+                <li>رضيت بالله رباً: 3 مرات</li>
+                <li>سيد الاستغفار: 1 مرة</li>
+                <li>سبحان الله وبحمده: 100 مرة</li>
+                <li>لا إله إلا الله: 10 مرات</li>
+                <li>وأذكار أخرى...</li>
+            </ul>
+            <p><strong>إجمالي التكرارات المطلوبة:</strong> <span class="counter" id="totalCount">133 تكرار</span></p>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 محاكي العداد</h2>
+            <p>العداد الحالي: <span class="counter" id="currentCount">0</span> / <span class="counter">133</span></p>
+            <p>النسبة المئوية: <span class="counter" id="percentage">0%</span></p>
+            <div style="background: #e9ecef; height: 20px; border-radius: 10px; overflow: hidden;">
+                <div id="progressBar" style="background: #007bff; height: 100%; width: 0%; transition: width 0.3s;"></div>
+            </div>
+            <br>
+            <button onclick="simulateCount()">محاكاة تسبيحة واحدة</button>
+            <button onclick="simulateDhikr()">محاكاة ذكر كامل (3 مرات)</button>
+            <button onclick="resetSimulation()">إعادة تعيين</button>
+        </div>
+
+        <div class="test-section success">
+            <h2>🎯 المميزات الجديدة</h2>
+            <ul>
+                <li>✅ عداد تكرارات دقيق لكل ذكر</li>
+                <li>✅ حفظ التقدم في التخزين المحلي</li>
+                <li>✅ شريط تقدم يعكس التكرارات الفعلية</li>
+                <li>✅ عرض النسبة المئوية الصحيحة</li>
+                <li>✅ إمكانية إعادة تعيين التقدم</li>
+                <li>✅ تطبيق نفس النظام على أذكار المساء</li>
+            </ul>
+        </div>
+
+        <div class="test-section info">
+            <h2>🚀 للتشغيل</h2>
+            <ol>
+                <li>تأكد من تثبيت Node.js</li>
+                <li>في مجلد المشروع، شغل: <code>npm install</code></li>
+                <li>ثم شغل: <code>npm run dev</code></li>
+                <li>افتح المتصفح على: <code>http://localhost:3000</code></li>
+                <li>اذهب لصفحة أذكار الصباح وجرب العداد الجديد!</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let currentCount = 0;
+        const totalCount = 133;
+
+        function updateDisplay() {
+            document.getElementById('currentCount').textContent = currentCount;
+            const percentage = Math.round((currentCount / totalCount) * 100);
+            document.getElementById('percentage').textContent = percentage + '%';
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        function simulateCount() {
+            if (currentCount < totalCount) {
+                currentCount++;
+                updateDisplay();
+            }
+        }
+
+        function simulateDhikr() {
+            const remaining = totalCount - currentCount;
+            const toAdd = Math.min(3, remaining);
+            currentCount += toAdd;
+            updateDisplay();
+        }
+
+        function resetSimulation() {
+            currentCount = 0;
+            updateDisplay();
+        }
+
+        // Initialize display
+        updateDisplay();
+    </script>
+</body>
+</html>
