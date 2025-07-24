@@ -11,7 +11,6 @@ export default function GeneralPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
   useEffect(() => {
-    // Load favorites from localStorage
     const savedFavorites = localStorage.getItem('azkar-favorites')
     if (savedFavorites) {
       setFavorites(JSON.parse(savedFavorites))
@@ -27,10 +26,8 @@ export default function GeneralPage() {
     localStorage.setItem('azkar-favorites', JSON.stringify(newFavorites))
   }
 
-  // Get unique categories
   const categories = ['all', ...Array.from(new Set(generalAdhkar.map(dhikr => dhikr.category)))]
-  
-  // Filter adhkar by category
+
   const filteredAdhkar = selectedCategory === 'all' 
     ? generalAdhkar 
     : generalAdhkar.filter(dhikr => dhikr.category === selectedCategory)
@@ -44,7 +41,14 @@ export default function GeneralPage() {
       'الخروج من المنزل': '🚪',
       'الطعام': '🍽️',
       'دخول الخلاء': '🚿',
-      'الخروج من الخلاء': '✨'
+      'الخروج من الخلاء': '✨',
+      'لبس الثوب': '👕',
+      'خلع الثوب': '🧥',
+      'الوضوء': '💧',
+      'الصلاة': '🕌',
+      'الجمعة': '📿',
+      'الهم والحزن': '😔',
+      'المرض': '🤒'
     }
     return icons[category] || '📿'
   }
@@ -58,14 +62,20 @@ export default function GeneralPage() {
       'الخروج من المنزل': 'from-red-500 to-pink-600',
       'الطعام': 'from-orange-500 to-red-500',
       'دخول الخلاء': 'from-gray-500 to-gray-600',
-      'الخروج من الخلاء': 'from-teal-500 to-blue-600'
+      'الخروج من الخلاء': 'from-teal-500 to-blue-600',
+      'لبس الثوب': 'from-lime-500 to-green-500',
+      'خلع الثوب': 'from-rose-400 to-pink-500',
+      'الوضوء': 'from-sky-400 to-blue-500',
+      'الصلاة': 'from-amber-500 to-yellow-600',
+      'الجمعة': 'from-indigo-600 to-blue-700',
+      'الهم والحزن': 'from-gray-600 to-gray-800',
+      'المرض': 'from-red-400 to-orange-500'
     }
     return colors[category] || 'from-gray-500 to-gray-600'
   }
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Header */}
       <div className="mb-8">
         <div className="flex items-center mb-4">
           <Link 
@@ -76,7 +86,7 @@ export default function GeneralPage() {
             <span>العودة للرئيسية</span>
           </Link>
         </div>
-        
+
         <div className="bg-gradient-to-r from-green-400 to-blue-500 rounded-xl p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
@@ -101,13 +111,12 @@ export default function GeneralPage() {
         </div>
       </div>
 
-      {/* Category Filter */}
       <div className="mb-6">
         <div className="flex items-center mb-4">
           <Filter className="w-5 h-5 ml-2 text-gray-600 dark:text-gray-400" />
           <span className="text-gray-600 dark:text-gray-400 arabic-text">تصفية حسب المناسبة:</span>
         </div>
-        
+
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <button
@@ -127,7 +136,6 @@ export default function GeneralPage() {
         </div>
       </div>
 
-      {/* Category Header */}
       {selectedCategory !== 'all' && (
         <div className={`bg-gradient-to-r ${getCategoryColor(selectedCategory)} rounded-lg p-4 mb-6 text-white`}>
           <h2 className="text-xl font-bold arabic-text flex items-center">
@@ -140,18 +148,16 @@ export default function GeneralPage() {
         </div>
       )}
 
-      {/* Adhkar List */}
       <div className="space-y-6">
         {filteredAdhkar.map((dhikr, index) => (
           <div key={dhikr.id} className="relative">
-            {/* Category Badge */}
             <div className={`
               absolute -right-3 -top-3 px-3 py-1 rounded-full text-xs font-medium text-white z-10
               bg-gradient-to-r ${getCategoryColor(dhikr.category)}
             `}>
               {getCategoryIcon(dhikr.category)} {dhikr.category}
             </div>
-            
+
             <DhikrCard
               dhikr={dhikr}
               onFavorite={handleFavorite}
@@ -161,7 +167,6 @@ export default function GeneralPage() {
         ))}
       </div>
 
-      {/* Empty State */}
       {filteredAdhkar.length === 0 && (
         <div className="text-center py-12">
           <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -174,7 +179,6 @@ export default function GeneralPage() {
         </div>
       )}
 
-      {/* Footer */}
       <div className="mt-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md text-center">
         <p className="text-gray-600 dark:text-gray-300 arabic-text mb-2">
           &ldquo;وَالذَّاكِرِينَ اللَّهَ كَثِيرًا وَالذَّاكِرَاتِ أَعَدَّ اللَّهُ لَهُم مَّغْفِرَةً وَأَجْرًا عَظِيمًا&rdquo;
